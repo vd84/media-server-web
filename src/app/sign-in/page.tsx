@@ -85,7 +85,7 @@ const SignUp = () => {
                     disabled={!username || !password}
                     className="w-full py-2 bg-blue-600 hover:bg-blue-700 text-white font-semibold rounded transition"
                 >
-                    Create Account
+                    Sign in
                 </button>
 
             </form>

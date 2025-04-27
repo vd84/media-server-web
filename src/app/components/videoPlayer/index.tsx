@@ -29,7 +29,7 @@ const MovieList = () => {
         if (!assuranceRes) {
             return;
         }
-        const response = await fetch(API_URL + "delete/" + movie, {method: "DELETE"});
+        const response = await fetch(API_URL + "delete/" + movie, {method: "DELETE", credentials: "include"});
         if (response.status === 200) {
             alert("Movie deleted");
             await fetchMovies();
@@ -50,6 +50,7 @@ const MovieList = () => {
                 method: "POST", body: formData, headers: {
                     "X-Filename": file.name,
                 },
+                credentials: "include",
             });
 
             if (!response.ok) {
