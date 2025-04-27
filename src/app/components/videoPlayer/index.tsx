@@ -1,20 +1,54 @@
 "use client";
-import React, {useEffect, useState} from "react";
+import React, {useCallback, useEffect, useState} from "react";
 import {API_URL} from "@/shared";
+import {Movie} from "@/types/movie";
+import {usePathname, useRouter, useSearchParams} from "next/navigation";
 
 const MovieList = () => {
-    const [movies, setMovies] = useState<string[]>([]);
+    const router = useRouter();
+    const [movies, setMovies] = useState<Movie[]>([]);
+    const [totalMovies, setTotalMovies] = useState<number>();
     const [loading, setLoading] = useState<boolean>(true);
     const [searchTerm, setSearchTerm] = useState<string>("");
+    const [page, setPage] = useState(1);
+    const [pageSize, setPageSize] = useState(10);
+    const pageSizes = [1, 5, 10, 15, 20, 30, 40, 50, 100];
+    const searchParams = useSearchParams()
+    const pathname = usePathname()
+
+    useEffect(() => {
+        fetchTotalCountMovies().catch((err) => console.error(err));
+        fetchMovies().catch((err) => console.error(err));
+        router.push(pathname + '?' + createQueryString('pageSize', pageSize.toString()));
+    }, []);
 
     useEffect(() => {
         fetchMovies().catch((err) => console.error(err));
-    }, []);
+    }, [searchParams]);
+
+    const createQueryString = useCallback((name: string, value: string) => {
+        const params = new URLSearchParams(searchParams.toString())
+        params.set(name, value)
+
+        return params.toString()
+    }, [searchParams])
+
+    async function fetchTotalCountMovies() {
+        try {
+            const response = await fetch(API_URL + "movies/count", {credentials: "include",});
+            const data = await response.json();
+            setTotalMovies(data.count);
+        } catch (error) {
+            console.error("Error fetching movies count:", error);
+        } finally {
+        }
+    }
+
 
     async function fetchMovies() {
         try {
             setLoading(true);
-            const response = await fetch(API_URL + "movies", {credentials: "include"});
+            const response = await fetch(API_URL + "movies?" + searchParams, {credentials: "include",});
             const data = await response.json();
             setMovies(data.movies);
         } catch (error) {
@@ -61,11 +95,16 @@ const MovieList = () => {
         await fetchMovies();
     }
 
+    const onChangePageSize = async (event: any) => {
+        setPageSize(event.target.value);
+        router.push(pathname + '?' + createQueryString('pageSize', event.target.value));
+    }
+
     return (<div className="p-6 w-100 bg-gray-900  text-white">
         <h1 className="text-4xl font-bold text-center mb-10">Movies</h1>
         {/* Upload Card */}
         <div
-            className="flex flex-col items-center justify-center p-4 mb-6 bg-gray-800 rounded-xl shadow hover:shadow-lg transition">
+            className="flex flex-col items-center justify-center p-4 mb-6 bg-gray-800 rounded-xl shadow hover:shadow-lg transition mb-10 max-w-md mx-auto">
             <h2 className="text-lg font-semibold mb-4 text-center">Add New Movie</h2>
 
             <input
@@ -83,7 +122,7 @@ const MovieList = () => {
             </label>
         </div>
         <div className="mb-10 max-w-md mx-auto">
-            <label htmlFor="search" className="block text-lg font-medium mb-2">
+            <label htmlFor="search" className="block text-lg font-medium mb-1">
                 Filter by title:
             </label>
             <input
@@ -91,19 +130,36 @@ const MovieList = () => {
                 type="text"
                 onInput={(e: any) => setSearchTerm(e.target.value)}
                 placeholder="Type to search..."
-                className="w-full px-4 py-2 text-gray-700 bg-gray-100 border-2 border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500 transition duration-200"
+                className="mb-2 w-full px-4 py-2 text-gray-700 bg-gray-100 border-2 border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500 transition duration-200"
                 title="Search"
             />
+            <label htmlFor="pageSize" className="block text-lg font-medium mb-1">
+                Page size:
+            </label>
+            <select
+                id="pageSize"
+                value={pageSize}
+                onChange={onChangePageSize}
+                className="block w-full px-4 py-2 mt-2 text-gray-700 bg-gray-100 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500 transition"
+            >
+                {pageSizes.map((pageSize: number) => (<option
+                    key={pageSize}
+                    value={pageSize}
+                >
+                    {pageSize}
+                </option>))}
+            </select>
+
         </div>
         {loading ? (<p className="text-center">Loading...</p>) : movies?.length > 0 ? (
             <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-6">
                 {movies
-                    .filter((movie) => movie.toLowerCase().includes(searchTerm.toLowerCase()))
+                    .filter((movie) => movie?.title?.toLowerCase().includes(searchTerm.toLowerCase()))
                     .map((movie) => (<div
-                        key={movie}
+                        key={movie.id}
                         className="flex flex-col items-center justify-between p-4 bg-gray-800 rounded-xl shadow hover:shadow-lg transition transform"
                     >
-                        <h2 className="text-lg font-semibold mb-2 text-center break-all">{movie}</h2>
+                        <h2 className="text-lg font-semibold mb-2 text-center break-all">{movie?.title}</h2>
                         <div className="w-full flex flex-col justify-center items-center space-y-2">
                             <a
                                 href={'stream/' + movie}
@@ -112,7 +168,7 @@ const MovieList = () => {
                                 Stream Movie
                             </a>
                             <button
-                                onClick={() => onDeleteMovie(movie)}
+                                onClick={() => onDeleteMovie(movie.filename)}
                                 className="mt-4 bg-red-600 hover:bg-red-700 text-white font-bold py-2 px-4 rounded w-full transition"
                             >
                                 Delete Movie
@@ -120,7 +176,21 @@ const MovieList = () => {
                         </div>
                     </div>))}
 
+
             </div>) : (<p className="text-center text-gray-500">No movies found.</p>)}
+
+        {movies?.length > 0 && totalMovies && (<div className="flex justify-center items-center mt-8 space-x-2">
+            {Array.from({length: Math.ceil(totalMovies / pageSize)}, (_, index) => (<button
+                key={index}
+                onClick={() => {
+                    setPage(index + 1);
+                    router.push(pathname + '?' + createQueryString('page', (index + 1).toString()));
+                }}
+                className={`px-4 py-2 rounded-lg ${page === index + 1 ? "bg-blue-600 text-white" : "bg-gray-700 text-gray-300 hover:bg-gray-600"} transition`}
+            >
+                {index + 1}
+            </button>))}
+        </div>)}
     </div>);
 };
 
