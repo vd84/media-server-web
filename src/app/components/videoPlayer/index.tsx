@@ -91,12 +91,12 @@ const MovieList = () => {
                                 className="flex flex-col items-center p-4 bg-gray-800 rounded-xl shadow hover:shadow-lg hover:scale-105 transition transform"
                             >
                                 <h2 className="text-lg font-semibold mb-2 text-center break-all">{movie}</h2>
-                                <video
-                                    className="rounded-lg shadow-lg border-2 border-gray-700 hover:shadow-xl transition-all duration-300"
-                                    controls
-                                    width="100%"
-                                    src={API_URL + "stream/" + movie}
-                                />
+                            <a
+                                href={'stream/' + movie}
+                                className="mt-2 w-full text-center bg-blue-600 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded transition"
+                            >
+                                Stream Movie
+                            </a>
                                 <button
                                     onClick={() => onDeleteMovie(movie)}
                                     className="mt-4 bg-red-600 hover:bg-red-700 text-white font-bold py-2 px-4 rounded w-full transition"
