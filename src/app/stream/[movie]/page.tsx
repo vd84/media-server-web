@@ -18,6 +18,8 @@ const Stream = ({ params }: PageProps) => {
                 className="rounded-lg shadow-lg border-2 border-gray-700 hover:shadow-xl transition-all duration-300 max-w-4xl w-full"
                 controls
                 src={API_URL + "stream/" + movie}
+                x-webkit-airplay="allow"
+                playsInline
             />
         </div>
     );

@@ -1,12 +1,11 @@
 "use client";
 import React, {useEffect, useState} from "react";
+import {API_URL} from "@/shared";
 
 const MovieList = () => {
     const [movies, setMovies] = useState<string[]>([]);
     const [loading, setLoading] = useState<boolean>(true);
     const [searchTerm, setSearchTerm] = useState<string>("");
-
-    const API_URL = "http://localhost:8080/";
 
     useEffect(() => {
         fetchMovies().catch((err) => console.error(err));
@@ -15,7 +14,7 @@ const MovieList = () => {
     async function fetchMovies() {
         try {
             setLoading(true);
-            const response = await fetch(API_URL + "movies");
+            const response = await fetch(API_URL + "movies", {credentials: "include"});
             const data = await response.json();
             setMovies(data.movies);
         } catch (error) {
