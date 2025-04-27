@@ -61,9 +61,27 @@ const MovieList = () => {
         await fetchMovies();
     }
 
-    return (<div className="p-6 bg-gray-900 min-h-screen text-white">
+    return (<div className="p-6 w-100 bg-gray-900  text-white">
         <h1 className="text-4xl font-bold text-center mb-10">Movies</h1>
+        {/* Upload Card */}
+        <div
+            className="flex flex-col items-center justify-center p-4 mb-6 bg-gray-800 rounded-xl shadow hover:shadow-lg transition">
+            <h2 className="text-lg font-semibold mb-4 text-center">Add New Movie</h2>
 
+            <input
+                id="upload"
+                type="file"
+                onChange={onUploadFile}
+                className="hidden"
+            />
+
+            <label
+                htmlFor="upload"
+                className="cursor-pointer bg-blue-600 hover:bg-blue-700 text-white font-semibold py-2 px-4 rounded-md transition text-center w-full"
+            >
+                Upload File
+            </label>
+        </div>
         <div className="mb-10 max-w-md mx-auto">
             <label htmlFor="search" className="block text-lg font-medium mb-2">
                 Filter by title:
@@ -77,49 +95,30 @@ const MovieList = () => {
                 title="Search"
             />
         </div>
-
         {loading ? (<p className="text-center">Loading...</p>) : movies?.length > 0 ? (
             <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-6">
                 {movies
                     .filter((movie) => movie.toLowerCase().includes(searchTerm.toLowerCase()))
                     .map((movie) => (<div
                         key={movie}
-                        className="flex flex-col items-center p-4 bg-gray-800 rounded-xl shadow hover:shadow-lg hover:scale-105 transition transform"
+                        className="flex flex-col items-center justify-between p-4 bg-gray-800 rounded-xl shadow hover:shadow-lg transition transform"
                     >
                         <h2 className="text-lg font-semibold mb-2 text-center break-all">{movie}</h2>
-                        <a
-                            href={'stream/' + movie}
-                            className="mt-2 w-full text-center bg-blue-600 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded transition"
-                        >
-                            Stream Movie
-                        </a>
-                        <button
-                            onClick={() => onDeleteMovie(movie)}
-                            className="mt-4 bg-red-600 hover:bg-red-700 text-white font-bold py-2 px-4 rounded w-full transition"
-                        >
-                            Delete Movie
-                        </button>
+                        <div className="w-full flex flex-col justify-center items-center space-y-2">
+                            <a
+                                href={'stream/' + movie}
+                                className="mt-2 w-full text-center bg-blue-600 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded transition"
+                            >
+                                Stream Movie
+                            </a>
+                            <button
+                                onClick={() => onDeleteMovie(movie)}
+                                className="mt-4 bg-red-600 hover:bg-red-700 text-white font-bold py-2 px-4 rounded w-full transition"
+                            >
+                                Delete Movie
+                            </button>
+                        </div>
                     </div>))}
-
-                {/* Upload Card */}
-                <div
-                    className="flex flex-col items-center justify-center p-4 bg-gray-800 rounded-xl shadow hover:shadow-lg transition">
-                    <h2 className="text-lg font-semibold mb-4 text-center">Add New Movie</h2>
-
-                    <input
-                        id="upload"
-                        type="file"
-                        onChange={onUploadFile}
-                        className="hidden"
-                    />
-
-                    <label
-                        htmlFor="upload"
-                        className="cursor-pointer bg-blue-600 hover:bg-blue-700 text-white font-semibold py-2 px-4 rounded-md transition text-center w-full"
-                    >
-                        Upload File
-                    </label>
-                </div>
 
             </div>) : (<p className="text-center text-gray-500">No movies found.</p>)}
     </div>);

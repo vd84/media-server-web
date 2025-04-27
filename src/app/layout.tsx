@@ -23,11 +23,11 @@ export default function RootLayout({
     return (<html lang="en" className="bg-gray-950 text-white">
         <body className={`${geistSans.variable} ${geistMono.variable} antialiased`}>
         <Header/>
-        <main className="container mx-auto px-4 py-8 min-h-screen">
+        <main className="min-h-screen">
             {children}
         </main>
         <footer className="text-center text-gray-500 py-4 text-sm">
-            © 2025 MediaServer. Built with 💪 by a Fullstack King
+            © 2025 MediaServer.
         </footer>
         </body>
         </html>);
