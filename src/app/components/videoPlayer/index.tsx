@@ -104,7 +104,7 @@ const MovieList = () => {
         <h1 className="text-4xl font-bold text-center mb-10">Movies</h1>
         {/* Upload Card */}
         <div
-            className="flex flex-col items-center justify-center p-4 mb-6 bg-gray-800 rounded-xl shadow hover:shadow-lg transition mb-10 max-w-md mx-auto">
+            className="flex flex-col items-center justify-center p-4 bg-gray-800 rounded-xl shadow hover:shadow-lg transition mb-10 max-w-md mx-auto">
             <h2 className="text-lg font-semibold mb-4 text-center">Add New Movie</h2>
 
             <input
@@ -162,7 +162,7 @@ const MovieList = () => {
                         <h2 className="text-lg font-semibold mb-2 text-center break-all">{movie?.title}</h2>
                         <div className="w-full flex flex-col justify-center items-center space-y-2">
                             <a
-                                href={'stream/' + movie}
+                                href={'stream/' + movie.filename}
                                 className="mt-2 w-full text-center bg-blue-600 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded transition"
                             >
                                 Stream Movie
