@@ -88,7 +88,14 @@ const MovieList = () => {
 
         if (!response.ok) {
             console.error("Error uploading file:", response.json());
+
+            if (response.status === 409) {
+                alert("Upload failed, movie already exists!");
+                return;
+            }
+
             alert("Upload failed!");
+            return;
         }
 
         alert("Upload successful!");
