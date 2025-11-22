@@ -3,7 +3,6 @@ import React, { useCallback, useEffect, useState } from "react";
 import { API_URL } from "@/shared";
 import { Movie } from "@/types/movie";
 import { usePathname, useRouter, useSearchParams } from "next/navigation";
-import Page from "@/app/page";
 import AppPage from "../app/components/appPage";
 
 const Home = () => {
