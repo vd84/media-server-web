@@ -1,9 +1,12 @@
 "use client";
 import React, { useState } from "react";
 import { API_URL } from "@/shared";
-import { useRouter } from "next/router";
+import { useRouter } from "next/navigation";
+import AppPage from "../components/appPage";
 
 const SignUp = () => {
+  const router = useRouter();
+
   const [username, setUsername] = useState("");
   const [password, setPassword] = useState("");
   const [repeatPassword, setRepeatPassword] = useState("");
@@ -11,8 +14,6 @@ const SignUp = () => {
   const [usernameError, setUsernameError] = useState("");
   const [passwordError, setPasswordError] = useState("");
   const [repeatPasswordError, setRepeatPasswordError] = useState("");
-
-  const router = useRouter();
 
   const hasErrors = () => {
     return !!usernameError || !!passwordError || !!repeatPasswordError;
@@ -81,7 +82,6 @@ const SignUp = () => {
       });
 
       if (res.ok) {
-        alert("Account created successfully!");
         router.push("/sign-in");
       } else {
         const data = await res.json();
@@ -94,9 +94,7 @@ const SignUp = () => {
   };
 
   return (
-    <div className="max-w-md mx-auto p-6 bg-gray-800 rounded-lg shadow-lg text-white">
-      <h1 className="text-3xl font-bold text-center mb-6">Sign Up</h1>
-
+    <AppPage title="Sign Up">
       <form onSubmit={onSubmit} className="space-y-6">
         <div>
           <label htmlFor="username" className="block mb-1">
@@ -157,7 +155,7 @@ const SignUp = () => {
           Create Account
         </button>
       </form>
-    </div>
+    </AppPage>
   );
 };
 

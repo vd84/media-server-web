@@ -2,6 +2,7 @@
 import React, { useState } from "react";
 import { API_URL } from "@/shared";
 import { useRouter } from "next/navigation";
+import AppPage from "../components/appPage";
 
 const SignUp = () => {
   const router = useRouter();
@@ -41,7 +42,7 @@ const SignUp = () => {
       });
 
       if (res.ok) {
-        router.push("/list");
+        router.push("/");
       } else {
         const data = await res.json();
         alert(data.error || "Failed to create account");
@@ -53,9 +54,7 @@ const SignUp = () => {
   };
 
   return (
-    <div className="max-w-md mx-auto p-6 bg-gray-800 rounded-lg shadow-lg text-white">
-      <h1 className="text-3xl font-bold text-center mb-6">Sign Up</h1>
-
+    <AppPage title="Sign in">
       <form onSubmit={onSubmit} className="space-y-6">
         <div>
           <label htmlFor="username" className="block mb-1">
@@ -96,11 +95,11 @@ const SignUp = () => {
               router.push("/sign-up");
             }}
           >
-            Sign Up
+            Sign up
           </button>
         </div>
       </form>
-    </div>
+    </AppPage>
   );
 };
 

@@ -30,12 +30,9 @@ export default function RootLayout({
         className={`${geistSans.variable} ${geistMono.variable} antialiased`}
       >
         <Header />
-        <main className="min-h-screen">
+        <main className="min-h-screen flex flex-col items-center justify-between px-4 py-8 sm:py-16">
           <Providers>{children}</Providers>
         </main>
-        <footer className="text-center text-gray-500 py-4 text-sm">
-          © 2025 MediaServer.
-        </footer>
       </body>
     </html>
   );

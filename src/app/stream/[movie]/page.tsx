@@ -2,13 +2,16 @@
 import { Movie } from "@/types/movie";
 import React from "react";
 import { useQuery } from "@tanstack/react-query";
-import { useParams } from "next/navigation";
+import { useParams, useRouter } from "next/navigation";
+import AppPage from "@/app/components/appPage";
 
 const Stream = () => {
   const params = useParams();
 
   const movie = params.movie;
   const API_URL = "http://localhost:8080/";
+
+  const router = useRouter();
 
   const { data, isLoading } = useQuery<Movie>({
     queryKey: ["movie", movie],
@@ -23,11 +26,29 @@ const Stream = () => {
       ),
   });
 
+  async function onDeleteMovie(movie?: string) {
+    if (!movie) {
+      alert("Invalid movie id");
+      return;
+    }
+    const assuranceRes = confirm("Are you sure you want to delete " + movie);
+    if (!assuranceRes) {
+      return;
+    }
+    const response = await fetch(API_URL + "delete/" + movie, {
+      method: "DELETE",
+      credentials: "include",
+    });
+    if (response.status === 200) {
+      alert("Movie deleted");
+      window.location.href = "/";
+    } else {
+      alert("Error deleting movie " + movie);
+    }
+  }
+
   return (
-    <div className="flex flex-col items-center justify-center min-h-screen bg-gray-900 p-8 text-white">
-      <h1 className="text-4xl font-bold mb-8 text-center break-all">
-        Streaming: {data?.omdbMovie.Title}
-      </h1>
+    <AppPage title={"Streaming: " + data?.omdbMovie.Title}>
       <h2>
         {data?.omdbMovie.Year} &#8226; {data?.omdbMovie.Genre} &#8226;{" "}
         {data?.omdbMovie.Runtime}
@@ -42,7 +63,16 @@ const Stream = () => {
         x-webkit-airplay="allow"
         playsInline
       />
-    </div>
+
+      <div className="w-full flex flex-col justify-center items-center space-y-2">
+        <button
+          onClick={() => onDeleteMovie(data?.id)}
+          className="mt-4 bg-red-600 hover:bg-red-700 text-white font-bold py-2 px-4 rounded w-full transition"
+        >
+          Delete Movie
+        </button>
+      </div>
+    </AppPage>
   );
 };
 
