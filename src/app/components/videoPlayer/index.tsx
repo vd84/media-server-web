@@ -130,6 +130,12 @@ const MovieList = () => {
     );
   };
 
+  const onChangeSearchTerm = (event: string) => {
+    router.push(
+      pathname + "?" + createQueryString("search", event)
+    );
+  };
+
   const onChangeImdbId = (event: any) => {
     setUploadMovieImdbId(event.target.value);
     setUploadMovieImdbIdValid(true);
@@ -181,7 +187,7 @@ const MovieList = () => {
         <input
           id="search"
           type="text"
-          onInput={(e: any) => setSearchTerm(e.target.value)}
+          onInput={(e: any) => onChangeSearchTerm(e.target.value)}
           placeholder="Type to search..."
           className="mb-2 w-full px-4 py-2 text-gray-700 bg-gray-100 border-2 border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500 transition duration-200"
           title="Search"
@@ -221,13 +227,13 @@ const MovieList = () => {
                 <img src={movie.omdbMovie.Poster}></img>
                 <div className="w-full flex flex-col justify-center items-center space-y-2">
                   <a
-                    href={"stream/" + movie.filename}
+                    href={"stream/" + movie.id}
                     className="mt-2 w-full text-center bg-blue-600 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded transition"
                   >
                     Stream Movie
                   </a>
                   <button
-                    onClick={() => onDeleteMovie(movie.filename)}
+                    onClick={() => onDeleteMovie(movie.id)}
                     className="mt-4 bg-red-600 hover:bg-red-700 text-white font-bold py-2 px-4 rounded w-full transition"
                   >
                     Delete Movie
