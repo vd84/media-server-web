@@ -131,9 +131,7 @@ const MovieList = () => {
   };
 
   const onChangeSearchTerm = (event: string) => {
-    router.push(
-      pathname + "?" + createQueryString("search", event)
-    );
+    router.push(pathname + "?" + createQueryString("search", event));
   };
 
   const onChangeImdbId = (event: any) => {
